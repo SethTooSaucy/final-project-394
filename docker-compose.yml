@@ -1,13 +1,13 @@
-name: "3940-Lab-3"
+name: "394"
 services:
   frontend:
-    container_name: 3940-Lab-3-frontend
+    container_name: frontend
     build: /frontend
     ports:
       - "3000:80"
 
   backend:
-    container_name: 3940-Lab-3-backend
+    container_name: backend
     build: /backend
     ports:
       - "5000:5000"

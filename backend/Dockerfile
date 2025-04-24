@@ -1,19 +1,19 @@
-# https://hub.docker.com/_/microsoft-dotnet
+# ===== BUILD STAGE =====
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-WORKDIR /source
+WORKDIR /src
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY *.csproj .
-RUN dotnet restore
+# Copy ONLY the backend project files (for efficient caching)
+COPY ./backend/*.sln .
+COPY ./backend/*.csproj .
+RUN dotnet restore  # Now works because files are in context
 
-# copy everything else and build app
-COPY . .
-RUN dotnet publish -c release -o /app --no-restore
+# Copy everything else and build
+COPY ./backend/. .
+RUN dotnet publish -c Release -o /app --no-restore
 
-# final stage/image
+# ===== RUNTIME STAGE =====
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 WORKDIR /app
-COPY --from=build /app ./
+COPY --from=build /app .
 EXPOSE 5000
 ENTRYPOINT ["dotnet", "backend.dll"]
