@@ -1,14 +1,45 @@
-## Pre-requisites
+Pokémon API with MongoDB
 
-1. I removed the Postgres docker config to simplify the project. You will need to have a Postgres instance running on your machine.
+A simple REST API for managing Pokémon data with MongoDB, designed to run in Docker.
 
-## Running Locally (.NET and Node.js)
+## Prerequisites
+- Docker Desktop (Windows/Mac) or Docker Engine (Linux)
+- PowerShell (Windows) or terminal (Mac/Linux)
 
-1. Follow the README instructions for both the frontend and backend folders.
+## Setup & Running
 
-## Running Locally (Docker)
+### 1. Clone the repository
+```bash
+git clone https://github.com/your-repo/midterm-SethTooSaucy.git
+cd midterm-SethTooSaucy
 
-1. Install Docker
-2. Create a `.env` file at root using the `.env.sample` file as a template
-3. Run the following compose command
-    - `docker compose up -d`
+2. Create environment file
+Create .env in the project root:
+
+3. Build and start containers
+docker-compose up --build
+
+4. Verify containers are running
+docker ps
+
+API Endpoints and Testing
+
+GET	/api/pokemon/:name	Get specific Pokémon by name
+Command:
+Invoke-RestMethod -Uri "http://localhost:5000/api/Pokemon/name" `
+  -Method Get
+
+POST	/api/pokemon	Add/update a Pokémon
+Command:
+$body = @{name="Feraligatr"; type="Water"} | ConvertTo-Json
+Invoke-RestMethod -Uri "http://localhost:5000/api/Pokemon" `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body $body
+
+DELETE	/api/pokemon/:name	Delete a Pokémon by name
+Command:
+Invoke-RestMethod -Uri "http://localhost:5000/api/Pokemon/name" `
+  -Method Delete
+
+

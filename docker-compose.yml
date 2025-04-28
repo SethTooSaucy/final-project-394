@@ -1,17 +1,28 @@
-name: "394"
+version: '3.8'
+
 services:
   frontend:
-    container_name: frontend
-    build: /frontend
+    build: ./frontend
     ports:
-      - "3000:80"
+      - "3000:3000"
+    environment:
+      - API_BASE_URL=http://localhost:5000/api  # Local dev URL
+    restart: unless-stopped
+    networks:
+      - pokemon-net
 
   backend:
-    container_name: backend
-    build: /backend
+    build: ./backend
     ports:
       - "5000:5000"
     environment:
-      ASPNETCORE_HTTP_PORTS: 5000
-      PostgresConnectionString: ${POSTGRES_CONNECTION_STRING}
-      AllowedOrigins: ${ALLOWED_ORIGINS}
+      - MONGODB_URI=${MONGODB_URI}
+      - PORT=5000
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}  # Inherits from .env
+    restart: unless-stopped
+    networks:
+      - pokemon-net
+
+networks:
+  pokemon-net:
+    driver: bridge

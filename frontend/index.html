@@ -1,13 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CMPS3940 Lab</title>
-    </head>
-    <body>
-        <div id="root"></div>
-        <script type="module" src="/src/main.tsx"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pokémon Manager</h1>
+        
+        <div class="form-section">
+            <h2>Add/Update Pokémon</h2>
+            <form id="pokemonForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select id="type" required>
+                        <option value="">Select a type</option>
+                        <option value="Fire">Fire</option>
+                        <option value="Water">Water</option>
+                        <option value="Grass">Grass</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Psychic">Psychic</option>
+                        <option value="Fighting">Fighting</option>
+                        <option value="Dark">Dark</option>
+                        <option value="Dragon">Dragon</option>
+                        <option value="Steel">Steel</option>
+                    </select>
+                </div>
+                <button type="submit">Save Pokémon</button>
+            </form>
+        </div>
+
+        <div class="search-section">
+            <h2>Search Pokémon</h2>
+            <div class="search-group">
+                <input type="text" id="searchName" placeholder="Enter Pokémon name">
+                <button id="searchBtn">Search</button>
+                <button id="getAllBtn">Get All Pokémon</button>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <h2>Results</h2>
+            <div id="pokemonResults"></div>
+            <div id="loading" class="hidden">Loading...</div>
+            <div id="error" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
