@@ -4,25 +4,15 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
-    environment:
-      - API_BASE_URL=http://localhost:5000/api  # Local dev URL
+      - "3000:80"
     restart: unless-stopped
-    networks:
-      - pokemon-net
+    # No depends_on needed since we're using localhost
 
-  backend:
+  api:
     build: ./backend
     ports:
       - "5000:5000"
     environment:
       - MONGODB_URI=${MONGODB_URI}
-      - PORT=5000
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}  # Inherits from .env
+      - PORT=${PORT}
     restart: unless-stopped
-    networks:
-      - pokemon-net
-
-networks:
-  pokemon-net:
-    driver: bridge

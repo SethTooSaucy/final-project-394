@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Manager</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -32,7 +32,7 @@
                         <option value="Steel">Steel</option>
                     </select>
                 </div>
-                <button type="submit">Save Pokémon</button>
+                <button type="submit">Submit</button>
             </form>
         </div>
 
@@ -41,18 +41,14 @@
             <div class="search-group">
                 <input type="text" id="searchName" placeholder="Enter Pokémon name">
                 <button id="searchBtn">Search</button>
-                <button id="getAllBtn">Get All Pokémon</button>
+                <button id="deleteBtn" class="danger">Delete</button>
             </div>
+            <div id="pokemonResult" class="result-container"></div>
         </div>
 
-        <div class="results-section">
-            <h2>Results</h2>
-            <div id="pokemonResults"></div>
-            <div id="loading" class="hidden">Loading...</div>
-            <div id="error" class="error hidden"></div>
-        </div>
+        <div id="statusMessage" class="status-message"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="frontend.js"></script>
 </body>
 </html>

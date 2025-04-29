@@ -1,56 +1,68 @@
 import express from 'express';
+import { MongoClient } from 'mongodb';
 import cors from 'cors';
-import Pokemon from './model.js';
-import { connectDB,  } from './db.js';
 
 const app = express();
-const corsOptions = {
-    origin: [
-      'http://localhost:3000',          // Local development
-      'https://final-project-394.vercel.app',  // Production frontend
-    ],
-    methods: ['GET', 'POST', 'DELETE'], // Only allow needed methods
-    credentials: true,                  // If using cookies/auth
-    optionsSuccessStatus: 200           // Legacy browser support
-  };
-  
-  app.use(cors(corsOptions));
 
-// Connect to MongoDB
-await connectDB();
+// Enable CORS for all routes
+app.use(cors({
+  origin: ['http://localhost:3000','https://final-project-394.vercel.app'] 
+}));
 
-// Routes
-app.get('/api/pokemon/:name', async (req, res) => {
-    try {
-        const pokemon = await Pokemon.findOne({ name: req.params.name });
-        res.json(pokemon || { error: "Not found" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+app.use(express.json());
+
+const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://localhost:27017');
+
+// GET Pokémon by name
+app.get('/api/Pokemon/:name', async (req, res) => {
+  try {
+    const db = client.db('Pokemon');
+    const pokemon = await db.collection('Pokemons').findOne({ name: req.params.name });
+    res.json(pokemon || { error: "Pokémon not found" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-app.post('/api/pokemon', async (req, res) => {
-    try {
-        const { name, type } = req.body;
-        await Pokemon.updateOne(
-            { name },
-            { $set: { type } },
-            { upsert: true }
-        );
-        res.status(201).json({ name, type });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+// POST - Add/Update Pokémon by name
+app.post('/api/Pokemon', async (req, res) => {
+  try {
+    const db = client.db('Pokemon');
+    const { name, type } = req.body;
+    
+    if (!name || !type) {
+      return res.status(400).json({ error: "Name and type are required" });
     }
+
+    await db.collection('Pokemons').updateOne(
+      { name }, 
+      { $set: { type } },  
+      { upsert: true }
+    );
+    
+    res.status(201).json({ name, type });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-app.delete('/api/pokemon/:name', async (req, res) => {
-    try {
-        await Pokemon.deleteOne({ name: req.params.name });
-        res.status(204).end();
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+// DELETE Pokémon by name
+app.delete('/api/Pokemon/:name', async (req, res) => {
+  try {
+    const db = client.db('Pokemon');
+    const result = await db.collection('Pokemons').deleteOne({ name: req.params.name });
+    
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "Pokémon not found" });
     }
+    
+    res.status(200).json({ message: "Pokémon deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start server
+client.connect().then(() => {
+  app.listen(5000, () => console.log('Pokémon API running on port 5000'));
+});

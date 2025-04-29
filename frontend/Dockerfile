@@ -1,6 +1,8 @@
-# frontend/Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY . .
-EXPOSE 3000
-CMD ["npx", "serve", "-s", ".", "-l", "3000"]
+FROM nginx:alpine
+
+# Copy built files
+COPY . /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

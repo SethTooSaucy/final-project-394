@@ -1,14 +1,16 @@
 FROM node:18-alpine
+
 WORKDIR /app
 
-# First copy ONLY package files
+# Copy package files first for better caching
 COPY package*.json ./
 
-# Then install dependencies
+# Install dependencies
 RUN npm install
 
-# Then copy everything else
+# Copy the rest of the files
 COPY . .
 
 EXPOSE 5000
+
 CMD ["node", "app.js"]
